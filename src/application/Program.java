@@ -6,52 +6,50 @@ import java.util.Date;
 import java.util.Scanner;
 
 import model.entities.Reservation;
+import model.exceptions.DomainException;
 
 public class Program {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
 		
 		Scanner sc = new Scanner(System.in);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
-		System.out.print("Numero do quarto: ");
-		int number = sc.nextInt();
-		System.out.print("Data do Check-In (dd/MM/yyyy): ");
-		Date checkIn = sdf.parse(sc.next());
-		System.out.print("Data do Check-Out (dd/MM/yyyy): ");
-		Date checkOut = sdf.parse(sc.next());
-		
-		if (!checkOut.after(checkIn)) {
-			System.out.println("Erro na reserva: A data de check-out deve ser após a data de check-in");
-		}
-		else {
+		try {
+			System.out.print("Numero do quarto: ");
+			int number = sc.nextInt();
+			System.out.print("Data do Check-In (dd/MM/yyyy): ");
+			Date checkIn = sdf.parse(sc.next());
+			System.out.print("Data do Check-Out (dd/MM/yyyy): ");
+			Date checkOut = sdf.parse(sc.next());
+			
+			
 			Reservation reservation = new Reservation(number, checkIn, checkOut);
 			System.out.println("Reserva: " + reservation);
-			
-			System.out.println();
-			System.out.println("Deseja atualizar a reserva? (s/n): ");
-			char type = sc.next().charAt(0);
-			
-			if (type == 's') {
-				System.out.println("Entre com a nova data de reserva: ");
-				System.out.print("Data do Check-In (dd/MM/yyyy): ");
-				checkIn = sdf.parse(sc.next());
-				System.out.print("Data do Check-Out (dd/MM/yyyy): ");
-				checkOut = sdf.parse(sc.next());
 				
-							
-				String error = reservation.updateDates(checkIn, checkOut);
-				if (error != null) {
-					System.out.println("Erro na reserva: " + error);
-				}
-				else {
-					System.out.println("Reserva: " + reservation);
-				}
-			}
-			else {
-				System.out.println("Tenha um otimo dia!");
-			}
+				
+			System.out.println("Entre com a nova data de reserva: ");
+			System.out.print("Data do Check-In (dd/MM/yyyy): ");
+			checkIn = sdf.parse(sc.next());
+			System.out.print("Data do Check-Out (dd/MM/yyyy): ");
+			checkOut = sdf.parse(sc.next());
+					
+								
+			reservation.updateDates(checkIn, checkOut);
+			System.out.println("Reserva: " + reservation);
 		}
+		catch (ParseException e) {
+			System.out.println("Data invalida");
+		}
+		catch (DomainException e) {
+			System.out.println("Erro na reserva: " + e.getMessage());
+		}
+		catch (RuntimeException e) {
+			System.out.println("Erro inesperado");
+		}
+		
+			
+	
 		
 		
 		
